@@ -1,5 +1,7 @@
 package com.example.filmapp.data.models;
 
+import android.net.Uri;
+
 import com.google.gson.annotations.SerializedName;
 
 public class Film {
@@ -8,6 +10,12 @@ public class Film {
     @SerializedName("oridinal_title")
     String originalTitle;
     String description;
+    @SerializedName("image_name")
+    String imageView;
+
+    public String getImageView() {
+        return imageView;
+    }
 
     public String getId() {
         return id;

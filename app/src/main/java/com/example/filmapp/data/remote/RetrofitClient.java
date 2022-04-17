@@ -11,7 +11,7 @@ public class RetrofitClient {
             .addConverterFactory(GsonConverterFactory.create())
             .build();
 
-    public FilmApi createFilmApi(){
+    public FilmApi createFilmApi() {
         return retrofit.create(FilmApi.class);
     }
 

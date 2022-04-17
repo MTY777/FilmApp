@@ -1,20 +1,23 @@
 package com.example.filmapp.ui.films;
 
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.filmapp.data.models.Film;
 import com.example.filmapp.databinding.ItemBinding;
+
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class FilmAdapter extends RecyclerView.Adapter<FilmAdapter.FilmViewHolder> {
 private List<Film> films = new ArrayList<>();
+
+
 
     public void setFilms(List<Film> films) {
         this.films = films;
@@ -48,6 +51,7 @@ private List<Film> films = new ArrayList<>();
         public void onBind(Film film) {
             binding.title.setText(film.getTitle());
             binding.description.setText(film.getDescription());
+            Glide.with(binding.getRoot()).load(film.getImageView() ).into(binding.image);
         }
     }
 }

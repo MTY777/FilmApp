@@ -48,7 +48,7 @@ public class FilmsFragment extends Fragment {
         App.api.getFilms().enqueue(new Callback<List<Film>>() {
             @Override
             public void onResponse(Call<List<Film>> call, Response<List<Film>> response) {
-                if (response.isSuccessful() && response.body() == null){
+                if (response.isSuccessful() && response.body() != null){
                     adapter.setFilms(response.body());
                 }else {
                     Snackbar.make(binding.getRoot(), response.message(), BaseTransientBottomBar.LENGTH_LONG).show();
