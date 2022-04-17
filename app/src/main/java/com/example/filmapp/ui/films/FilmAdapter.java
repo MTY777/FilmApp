@@ -1,6 +1,7 @@
 package com.example.filmapp.ui.films;
 
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -9,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.filmapp.data.models.Film;
 import com.example.filmapp.databinding.ItemBinding;
+import com.example.filmapp.interfaces.OnClickListener;
 
 
 import java.util.ArrayList;
@@ -16,10 +18,13 @@ import java.util.List;
 
 public class FilmAdapter extends RecyclerView.Adapter<FilmAdapter.FilmViewHolder> {
 private List<Film> films = new ArrayList<>();
+private OnClickListener onClickListener;
 
+    public void setOnClickListener(OnClickListener onClickListener) {
+        this.onClickListener = onClickListener;
+    }
 
-
-    public void setFilms(List<Film> films) {
+    public void setFilms(List<Film> films){
         this.films = films;
         notifyDataSetChanged();
     }
@@ -41,6 +46,7 @@ private List<Film> films = new ArrayList<>();
         return films.size();
     }
 
+
     protected class FilmViewHolder extends RecyclerView.ViewHolder{
         private ItemBinding binding;
         public FilmViewHolder(ItemBinding binding) {
@@ -51,7 +57,13 @@ private List<Film> films = new ArrayList<>();
         public void onBind(Film film) {
             binding.title.setText(film.getTitle());
             binding.description.setText(film.getDescription());
-            Glide.with(binding.getRoot()).load(film.getImageView() ).into(binding.image);
+            Glide.with(binding.getRoot()).load(film.getImage()).into(binding.image);
+            binding.getRoot().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onClickListener.onClick(film);
+                }
+            });
         }
     }
 }

@@ -10,11 +10,10 @@ public class Film {
     @SerializedName("oridinal_title")
     String originalTitle;
     String description;
-    @SerializedName("image_name")
-    String imageView;
+    String image;
 
-    public String getImageView() {
-        return imageView;
+    public String getImage() {
+        return image;
     }
 
     public String getId() {

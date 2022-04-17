@@ -1,67 +1,67 @@
-package com.example.filmapp.ui.films;
+
+package com.example.filmapp.ui.film_detail;
 
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.filmapp.App;
-import com.example.filmapp.R;
+
 import com.example.filmapp.data.models.Film;
-import com.example.filmapp.data.remote.FilmApi;
-import com.example.filmapp.databinding.FragmentFilmsBinding;
+import com.example.filmapp.databinding.FragmentFilmDetailBinding;
+
 import com.example.filmapp.interfaces.OnClickListener;
-import com.example.filmapp.ui.film_detail.FilmDetailFragment;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 
-import java.util.List;
+import java.util.Collections;
+
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class FilmsFragment extends Fragment implements OnClickListener {
-    private FragmentFilmsBinding binding;
-    private FilmAdapter adapter;
+
+public class FilmDetailFragment extends Fragment implements OnClickListener {
+private FragmentFilmDetailBinding binding;
+private DetailAdapter adapter;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        adapter = new FilmAdapter();
+    adapter = new DetailAdapter();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        binding = FragmentFilmsBinding.inflate(inflater, container, false);
-        binding.recycle.setAdapter(adapter);
-        adapter.setOnClickListener(this);
+        binding = FragmentFilmDetailBinding.inflate(inflater, container, false);
+        binding.recycler.setAdapter(adapter);
         return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        App.api.getFilms().enqueue(new Callback<List<Film>>() {
+        Bundle bundle = getArguments();
+        App.api.getFilmsId(bundle.getString("key")).enqueue(new Callback<Film>() {
             @Override
-            public void onResponse(Call<List<Film>> call, Response<List<Film>> response) {
+            public void onResponse(Call<Film> call, Response<Film> response) {
                 if (response.isSuccessful() && response.body() != null){
-                    adapter.setFilms(response.body());
+                    adapter.setFilms(Collections.singletonList(response.body()));
                 }else {
                     Snackbar.make(binding.getRoot(), response.message(), BaseTransientBottomBar.LENGTH_LONG).show();
                 }
             }
 
             @Override
-            public void onFailure(Call<List<Film>> call, Throwable t) {
+            public void onFailure(Call<Film> call, Throwable t) {
                 Snackbar.make(binding.getRoot(), t.getLocalizedMessage(), BaseTransientBottomBar.LENGTH_LONG).show();
 
             }
@@ -70,8 +70,6 @@ public class FilmsFragment extends Fragment implements OnClickListener {
 
     @Override
     public void onClick(Film film) {
-        Bundle bundle = new Bundle();
-        bundle.putString("key", film.getId());
-        Navigation.findNavController(requireView()).navigate(R.id.filmDetailFragment, bundle);
+
     }
 }
