@@ -1,6 +1,7 @@
 
 package com.example.filmapp.ui.film_detail;
 
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -11,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bumptech.glide.Glide;
 import com.example.filmapp.App;
 
 import com.example.filmapp.data.models.Film;
@@ -20,7 +22,9 @@ import com.example.filmapp.interfaces.OnClickListener;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 
 import retrofit2.Call;
@@ -30,11 +34,12 @@ import retrofit2.Response;
 
 public class FilmDetailFragment extends Fragment implements OnClickListener {
 private FragmentFilmDetailBinding binding;
-private DetailAdapter adapter;
+    private Film film = new Film();
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    adapter = new DetailAdapter();
+
     }
 
     @Override
@@ -42,7 +47,6 @@ private DetailAdapter adapter;
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentFilmDetailBinding.inflate(inflater, container, false);
-        binding.recycler.setAdapter(adapter);
         return binding.getRoot();
     }
 
@@ -54,11 +58,14 @@ private DetailAdapter adapter;
             @Override
             public void onResponse(Call<Film> call, Response<Film> response) {
                 if (response.isSuccessful() && response.body() != null){
-                    adapter.setFilms(Collections.singletonList(response.body()));
+                   film = (response.body());
+                   metod();
                 }else {
                     Snackbar.make(binding.getRoot(), response.message(), BaseTransientBottomBar.LENGTH_LONG).show();
                 }
             }
+
+
 
             @Override
             public void onFailure(Call<Film> call, Throwable t) {
@@ -72,4 +79,10 @@ private DetailAdapter adapter;
     public void onClick(Film film) {
 
     }
+    private void metod() {
+        binding.title.setText(film.getTitle());
+        binding.description.setText(film.getDescription());
+        Glide.with(binding.image).load(film.getImage()).into(binding.image);
+    }
+
 }
